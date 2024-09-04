@@ -10,23 +10,30 @@
     <div class="game-zone">
         <h1>Minesweeper Game 💣</h1>
 
-        <section>
+        <section class="game-details">
             <table>
                 <tbody>
                     <tr>
-                        <td>Life:</td>
-                        <td class="life">
-                            <div> <span></span> </div>
-                        </td>
+                        <td>💛 Life:</td>
+                        <td class="life"> <span></span></td>
                         <td></td>
                         <td class="flag">🚩:<span></span></td>
+                        <td></td>
+                        <td>
+                            <div id="timer">000</div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
+
+            <div class="emoji-status"><button onclick="onInit()">😁</button></div>
+            <button class="hint-btn" onclick="lightHintBtn(this)">💡</button>
+            <button class="hint-btn" onclick="lightHintBtn(this)">💡</button>
+            <button class="hint-btn" onclick="lightHintBtn(this)">💡</button>
         </section>
 
 
-        <section>
+        <section class="board">
             <table>
                 <tbody class="game-board">
 
@@ -35,24 +42,19 @@
         </section>
 
 
-
-        <div class="difficulty">
-            <table>
-                <tbody>
-                    <tr>
-                        <td onclick="createBoardPerDifficulty(4)">Beginner</td>
-                        <td onclick="createBoardPerDifficulty(8)">Medium</td>
-                        <td onclick="createBoardPerDifficulty(12)">Expert</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="modal">
-            <h2></h2>
-            <button onclick="onInit()"><b>Restart</b></button>
-        </div>
-
+        <section class="difficulty-levels">
+            <div class="difficulty">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td onclick="createBoardPerDifficulty(4)">Beginner</td>
+                            <td onclick="createBoardPerDifficulty(8)">Medium</td>
+                            <td onclick="createBoardPerDifficulty(12)">Expert</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
         <footer>Gal Ben David</footer>
 
