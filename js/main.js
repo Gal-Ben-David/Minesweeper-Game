@@ -11,6 +11,7 @@ const NORMAL = '🙂'
 var gBoard
 var gLifeCount
 var gIsFirstClick
+var gIsVictory
 
 var gHintBtnIsOn
 var gSelectedHintBtn
@@ -20,6 +21,12 @@ var gSafeClickCount
 var gMegaHintIsOn
 var gClickCountInMegaMode
 var gSelectedCells
+
+var gHiddenMines
+var gExterminator
+
+var gGameStates
+var gStepsOnBoard
 
 var gLevel = {
     SIZE: 4,
@@ -61,7 +68,7 @@ function buildBoard(size = 4) {
                 minesAroundCount: 0,
                 isShown: false,
                 isMine: false,
-                isMarked: false
+                isMarked: false,
             }
         }
     }
@@ -150,14 +157,17 @@ function onCellMarked(event, elCell, i, j) {
 function cellClicked(elCell, cellI, cellJ) {
     if (!gGame.isOn) return
 
+    saveStep()
+
     const clickedCell = gBoard[cellI][cellJ]
     var coord = { i: cellI, j: cellJ }
+    gStepsOnBoard.push([clickedCell, coord])
 
 
     if (gIsFirstClick) {
         startTimer()
         setMinesInRandCell(cellI, cellJ)
-        setMinesNegsCount()
+        setMineNegsCount()
         gIsFirstClick = false
     }
 
@@ -202,6 +212,8 @@ function cellClicked(elCell, cellI, cellJ) {
 
     if (!clickedCell.isMine && clickedCell.minesAroundCount === 0) {
         expandShown(gBoard, elCell, cellI, cellJ)
+        //gStepsOnBoard[gStepsOnBoard.length - 1] = ([clickedCell, coord], expandedCells)
+
     }
 
     isVictory()
@@ -224,6 +236,7 @@ function getSelector(coord) {
 
 
 function expandShown(board, elCell, cellI, cellJ) {
+    var expandedCells = [] //for UNDO
 
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= gBoard.length) continue
@@ -241,10 +254,12 @@ function expandShown(board, elCell, cellI, cellJ) {
                 }
 
                 const coord = { i, j }
+                expandedCells.push([currCell, coord])
                 renderCell(currCell, coord)
             }
         }
     }
+    return expandedCells
 }
 
 
@@ -255,7 +270,10 @@ function renderCell(cell, coord) {
     const elTd = document.querySelector(selector)
 
     elTd.classList.add('mark')
-    if (gBoard[coord.i][coord.j].isMine) cellValue = BOMB
+    if (gBoard[coord.i][coord.j].isMine) {
+        cellValue = BOMB
+        gHiddenMines--
+    }
     else cellValue = (cell.minesAroundCount === 0) ? '' : cell.minesAroundCount
 
     elTd.innerText = cellValue
@@ -296,7 +314,7 @@ function revealMines() {
 
 
 
-function setMinesNegsCount() {
+function setMineNegsCount() {
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard[0].length; j++) {
             var minesNegsCount = countNegs(i, j, gBoard)
@@ -376,6 +394,11 @@ function findSafeCell() {
 
 function selectRandCell(cells) {
     var randIdx = getRandomInt(0, cells.length)
+
+    if (cells.length >= 3) {
+        return cells.splice(randIdx, 1)[0]
+    }
+
     return cells[randIdx]
 }
 
@@ -437,12 +460,19 @@ function turnOnMegaMode() {
     }, 3000);
 }
 
+
+
 function turnOnDarkMode() {
     document.querySelector('.game-zone').classList.toggle('dark-mode')
-    document.querySelector('.game-details').classList.toString('dark-mode')
 }
 
+
+
 function findMineCells() {
+
+    if (gExterminator) return
+
+    gExterminator = true
     const mineCells = []
 
     for (var i = 0; i < gBoard.length; i++) {
@@ -455,24 +485,43 @@ function findMineCells() {
             }
         }
     }
+    console.log('mines cells', mineCells)
     changeStatusIsMine(mineCells)
 }
 
 
 function changeStatusIsMine(mineCells) {
-    var countRemovedMineCell = 0
 
-    for (var i = 0; i < 3; i++) {
+    var cellToRemove = (gHiddenMines < 3) ? gHiddenMines : 3
+
+    if (gLevel.MINES === 4) cellToRemove = 1
+
+    for (var i = 0; i < cellToRemove; i++) {
         var randMineCell = selectRandCell(mineCells)
 
-        gBoard[randMineCell[1].i][randMineCell[1].j].isMine = false
-        countRemovedMineCell++
+        var coord = { i: randMineCell[1].i, j: randMineCell[1].j }
+
+        gBoard[coord.i][coord.j].isMine = false
+        gBoard[coord.i][coord.j].isShown = true
+        gGame.shownCount++
+
+        console.log(gGame.shownCount)
+
+        var selector = getSelector(coord)
+        var elCell = document.querySelector(selector)
+        elCell.classList.add('mark')
+        elCell.innerText = ''
+
     }
 
-    gLevel.MINES -= countRemovedMineCell
+    gHiddenMines -= cellToRemove
+    gLevel.MINES -= cellToRemove
+
     document.querySelector('.flag span').innerText = gLevel.MINES
 
-    setMinesNegsCount()
+    setMineNegsCount()
+    isVictory()
+
 }
 
 
@@ -481,44 +530,92 @@ function checkGameOver() {
         stopTimer()
         revealMines()
         gGame.isOn = false
-
-        const elEmojiBtn = document.querySelector('.emoji-status button')
-        elEmojiBtn.innerText = LOSE
-
-        document.querySelector('.modal').style.display = 'block'
-        document.querySelector('.status-msg').innerText = 'Blew up! 😵'
-
-        setTimeout(() => {
-            document.querySelector('.modal').style.display = 'none'
-        }, 2000);
+        showMsg()
     }
 }
+
 
 
 function isVictory() {
     const optCellsToReveal = gBoard.length * gBoard[0].length
 
     if (gGame.shownCount === optCellsToReveal - gLevel.MINES) {
+        gIsVictory = true
         gGame.isOn = false
         stopTimer()
+        showMsg()
+    }
 
-        const elEmojiBtn = document.querySelector('.emoji-status button')
-        elEmojiBtn.innerText = WIN
+}
 
-        document.querySelector('.modal').style.display = 'block'
-        document.querySelector('.status-msg').innerText = 'Amazing job!'
 
-        setTimeout(() => {
-            document.querySelector('.modal').style.display = 'none'
-        }, 2000);
+function showMsg() {
+    const elEmojiBtn = document.querySelector('.emoji-status button')
+    elEmojiBtn.innerText = (gIsVictory) ? WIN : LOSE
 
+    document.querySelector('.modal').style.display = 'block'
+    const elStatusMsg = document.querySelector('.status-msg')
+    elStatusMsg.innerText = (gIsVictory) ? 'Amazing job!' : 'Blew up! 😵'
+
+    setTimeout(() => {
+        document.querySelector('.modal').style.display = 'none'
+    }, 2000);
+
+}
+
+function getGameState() {
+    return {
+        board: copyMat(gBoard),
+        steps: gStepsOnBoard,
+        shownCount: gGame.shownCount,
+        markedCount: gGame.markedCount,
+        lifeCount: gLifeCount.slice(),
+        firstClick: gIsFirstClick
     }
 }
 
+function restoreGameState(state) {
+    gBoard = state.board
+    gStepsOnBoard = state.steps
+    gGame.shownCount = state.shownCount
+    gGame.markedCount = state.markedCount
+    gLifeCount = state.lifeCount
+    gIsFirstClick = state.firstClick
+
+    console.log('life', gLifeCount)
+    const elLifeCount = document.querySelector('.life span')
+    elLifeCount.innerText = gLifeCount.join().replaceAll(',', '')
+
+
+    if (gStepsOnBoard.length > 0) {
+        var prevStep = gStepsOnBoard.pop()
+
+        if (prevStep) {
+            gBoard[prevStep[1].i][prevStep[1].j].isShown = false
+        }
+        removeMarkedCell(prevStep[1])
+    }
+}
+
+function saveStep() {
+    gGameStates.push(getGameState())
+}
+
+function undoStep() {
+    console.log('hi')
+    if (!gGame.isOn) return
+
+    if (gGameStates.length > 0) {
+        const state = gGameStates.pop()
+        restoreGameState(state)
+    }
+    else return
+}
 
 
 function initializeParameters() {
     gIsFirstClick = true
+    gIsVictory = false
     gGame.isOn = true
     gGame.markedCount = gLevel.MINES
     gGame.shownCount = 0
@@ -526,7 +623,14 @@ function initializeParameters() {
 
     gHintBtnIsOn = false
 
+    gExterminator = false
+
     gSafeClickCount = 3
+
+    gHiddenMines = gLevel.MINES
+
+    gGameStates = []
+    gStepsOnBoard = []
 
     gMegaHintIsOn = false
     gClickCountInMegaMode = 0
