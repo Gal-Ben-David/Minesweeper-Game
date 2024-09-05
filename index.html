@@ -14,7 +14,7 @@
             <table>
                 <tbody>
                     <tr>
-                        <td>💛 Life:</td>
+                        <td>Life:</td>
                         <td class="life"> <span></span></td>
                         <td></td>
                         <td class="flag">🚩:<span></span></td>
@@ -26,10 +26,27 @@
                 </tbody>
             </table>
 
-            <div class="emoji-status"><button onclick="onInit()">😁</button></div>
-            <button class="hint-btn" onclick="lightHintBtn(this)">💡</button>
-            <button class="hint-btn" onclick="lightHintBtn(this)">💡</button>
-            <button class="hint-btn" onclick="lightHintBtn(this)">💡</button>
+            <div class="emoji-status"><button onclick="onInit()"></button></div>
+
+            <div class="modal">
+                <h2 class="status-msg"></h2>
+                <h3></h3>
+            </div>
+
+            <button class="hint-btn" onclick="lightHintBtn(this, 1)">💡</button>
+            <button class="hint-btn" onclick="lightHintBtn(this, 2)">💡</button>
+            <button class="hint-btn" onclick="lightHintBtn(this, 3)">💡</button>
+
+
+            <div class="safe-btn"><button onclick="findSafeCell()">Safe Click</button></div>
+            <h4><span></span> clicks available</h4>
+
+            <div class="mega-hint-btn"><button onclick="turnOnMegaMode()">Mage Hint 🌟</button></div>
+            <div class="modal-hint-instruction"></div>
+
+            <div class="dark-mode-btn"><button onclick="turnOnDarkMode()">Dark-Mode</button></div>
+
+            <div class="exterminator-btn"><button onclick="findMineCells()">Exterminator</button></div>
         </section>
 
 
