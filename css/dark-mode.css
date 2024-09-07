@@ -26,6 +26,10 @@
     box-shadow: 0px 4px 20px rgba(253, 253, 253, 0.186);
 }
 
+.safe-clicks-count {
+    color: white
+}
+
 .dark-mode .dark-mode-btn button,
 .dark-mode .mega-hint-btn button,
 .dark-mode .safe-btn button,
