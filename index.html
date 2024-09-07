@@ -3,52 +3,99 @@
 <head>
     <title>Minesweeper game</title>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
 </head>
 
 <body onload="onInit()">
+
+    <div id="first-modal" class="modal-show-once">
+
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">×</span>
+            <img src="img/left-click.png"><img src="img/right-click.png">
+        </div>
+    </div>
 
     <div class="game-zone">
         <h1>Minesweeper Game 💣</h1>
 
         <section class="game-details">
-            <table>
+            <table class="items">
                 <tbody>
                     <tr>
-                        <td>Life:</td>
+                        <td>Lives:</td>
                         <td class="life"> <span></span></td>
                         <td></td>
-                        <td class="flag">🚩:<span></span></td>
+                        <td class="flag"><img src="img/flag.png">:&nbsp;&nbsp;<span></span></td>
                         <td></td>
                         <td>
                             <div id="timer">000</div>
                         </td>
+                        <td><img src="img/clock.png"></td>
                     </tr>
                 </tbody>
             </table>
 
             <div class="emoji-status"><button onclick="onInit()"></button></div>
 
+
+
+
             <div class="modal">
                 <h2 class="status-msg"></h2>
                 <h3></h3>
             </div>
 
-            <button class="hint-btn" onclick="lightHintBtn(this, 1)">💡</button>
-            <button class="hint-btn" onclick="lightHintBtn(this, 2)">💡</button>
-            <button class="hint-btn" onclick="lightHintBtn(this, 3)">💡</button>
 
 
-            <div class="safe-btn"><button onclick="findSafeCell()">Safe Click</button></div>
-            <h4><span></span> clicks available</h4>
+            <table class="functions">
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="dark-mode-btn"><button onclick="turnOnDarkMode()">Dark-Mode 🌙</button></div>
+                        </td>
+                        <td>
+                            <div class="exterminator-btn"><button onclick="findMineCells()">Exterminator ⚡️</button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="undo-btn"><button onclick="undoStep()">UNDO ↩️</button></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="mega-hint-btn"><button onclick="turnOnMegaMode()">Mega Hint 🌟</button></div>
+                        </td>
+                        <td>
+                            <div>
+                                <div class="diy-btn"><button onclick="turnOnManualMode()"> DIY </button></div>
 
-            <div class="mega-hint-btn"><button onclick="turnOnMegaMode()">Mega Hint 🌟</button></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="safe-btn"><button onclick="findSafeCell()">Safe Click 🛡️</button></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="hint-lamps">
+                            <button class="hint-btn" onclick="lightHintBtn(this, 1)">💡</button>
+                            <button class="hint-btn" onclick="lightHintBtn(this, 2)">💡</button>
+                            <button class="hint-btn" onclick="lightHintBtn(this, 3)">💡</button>
+                        </td>
+                        <td>
+                            <div class="mines-count"><span class="located-mines"></span> / <span
+                                    class="all-mines"></span> are placed</div>
+                        </td>
+                        <td>
+                            <div class="safe-clicks-count"> <span></span> clicks available </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
             <div class="modal-hint-instruction"></div>
-
-            <div class="dark-mode-btn"><button onclick="turnOnDarkMode()">Dark-Mode</button></div>
-
-            <div class="exterminator-btn"><button onclick="findMineCells()">Exterminator</button></div>
-
-            <div class="exterminator-btn"><button onclick="undoStep()">UNDO</button></div>
         </section>
 
 
@@ -66,19 +113,45 @@
                 <table>
                     <tbody>
                         <tr>
-                            <td onclick="createBoardPerDifficulty(4)">Beginner</td>
-                            <td onclick="createBoardPerDifficulty(8)">Medium</td>
-                            <td onclick="createBoardPerDifficulty(12)">Expert</td>
+                            <td onclick="createBoardPerDifficulty(4)">Beginner 🟢</td>
+                            <td onclick="createBoardPerDifficulty(8)">Medium 🟡</td>
+                            <td onclick="createBoardPerDifficulty(12)">Expert 🔴</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <footer>Gal Ben David</footer>
 
-        <script src="js/utils.js"></script>
-        <script src="js/main.js"></script>
+        <footer>Gal Ben David</footer>
+    </div>
+
+    <section class="score">
+        <table class="best-score">
+            <tbody>
+                <th colspan="3"> Best Score 🥇</th>
+                <tr class="levels">
+                    <td class="beginner-level">Beginner</td>
+                    <td class="medium-level">Medium</td>
+                    <td class="expert-level">Expert</td>
+                </tr>
+                <tr class="score-res">
+                    <td>
+                        <div id="beginner-best-score"></div>
+                    </td>
+                    <td>
+                        <div id="medium-best-score"></div>
+                    </td>
+                    <td>
+                        <div id="expert-best-score"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
 
 </body>
 

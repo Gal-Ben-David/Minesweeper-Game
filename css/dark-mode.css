@@ -1,0 +1,82 @@
+* {
+    box-sizing: border-box;
+
+}
+
+.dark-mode {
+    background: #1c1c1ce0;
+    color: white;
+}
+
+
+.dark-mode .game-zone {
+    background-color: #2d2d2d;
+    box-shadow: 0px 4px 20px rgba(253, 253, 253, 0.1);
+}
+
+.dark-mode h1 {
+    color: white;
+}
+
+.dark-mode td {
+    color: white;
+}
+
+.dark-mode .game-board td {
+    box-shadow: 0px 4px 20px rgba(253, 253, 253, 0.186);
+}
+
+.dark-mode .dark-mode-btn button,
+.dark-mode .mega-hint-btn button,
+.dark-mode .safe-btn button,
+.dark-mode .exterminator-btn button,
+.dark-mode .undo-btn button,
+.dark-mode .diy-btn button {
+    background-color: #444;
+    color: white;
+
+}
+
+.dark-mode .difficulty td {
+    background-color: #444;
+}
+
+.dark-mode .mark {
+    background-color: rgb(210, 253, 185);
+}
+
+.dark-mode .game-board td {
+    color: black;
+}
+
+.dark-mode footer {
+    color: white;
+}
+
+.dark-mode .best-score th {
+    background-color: #3c3d3de0;
+    color: white;
+}
+
+.dark-mode .levels td {
+    background-color: rgb(119, 119, 119);
+}
+
+.dark-mode .score-res td {
+    background-color: rgb(167, 177, 175);
+}
+
+.dark-mode .score-res td:hover {
+    background-color: #b8cbcb;
+    cursor: pointer;
+}
+
+.dark-mode button {
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.dark-mode .emoji-status button:hover,
+.dark-mode .hint-lamps button:hover {
+    background-color: rgba(0, 0, 0, 0.515);
+}
