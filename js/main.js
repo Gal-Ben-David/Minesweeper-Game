@@ -712,7 +712,7 @@ function setMinesByUser(cell, coord) {
 
 
 function getBestScore(level) {
-    return localStorage.getItem(`bestScore-${level}`) || 0
+    return localStorage.getItem(`bestScore-${level}`) || Infinity
 }
 
 function getBestScoreName(level) {
