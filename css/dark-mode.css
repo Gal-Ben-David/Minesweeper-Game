@@ -26,7 +26,7 @@
     box-shadow: 0px 4px 20px rgba(253, 253, 253, 0.186);
 }
 
-.safe-clicks-count {
+.dark-mode .safe-clicks-count {
     color: white
 }
 
