@@ -56,6 +56,7 @@ const gTimerDisplay = document.getElementById('timer');
 
 
 function onInit() {
+    initializeBestScores()
     gBoard = buildBoard()
     initializeMinesNum()
     initializeParameters()
@@ -113,6 +114,7 @@ function renderBoard(board) {
 
 function createBoardPerDifficulty(size) {
     stopTimer()
+    initializeBestScores()
     gBoard = buildBoard(size)
     initializeMinesNum(size)
     initializeParameters()
@@ -726,6 +728,19 @@ function updateBestScore(level, newScore) {
         localStorage.setItem(`bestScore-${level}`, newScore)
         var playerName = prompt('New Record! Enter your name');
         localStorage.setItem(`bestScoreName-${level}`, playerName)
+    }
+}
+
+function initializeBestScores() {
+    const names = ['Gal Ben David', 'Yuval Ravid', 'Elior Cohen']
+    const bestScore = [13, 94, 175]
+    for (var i = 0; i < gDifficultyLevels.length; i++) {
+        var level = gDifficultyLevels[i]
+        if (!localStorage.getItem(`bestScore-${level}`)) {
+            localStorage.setItem(`bestScore-${level}`, bestScore[i]);
+            localStorage.setItem(`bestScoreName-${level}`, names[i]);
+        }
+
     }
 }
 
