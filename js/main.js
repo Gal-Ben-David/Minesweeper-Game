@@ -381,7 +381,7 @@ function countMineNegs(cellI, cellJ, mat) {
 
 
 function lightHintBtn(elBtn, i) {
-    if (!gGame.isOn) return
+    if (!gGame.isOn || gDIYisON) return
 
     elBtn.style.textShadow = '0px 0px 13px red'
     gHintBtnIsOn = true
@@ -407,7 +407,7 @@ function findSafeCell() {
     const safeCells = []
     gSafeClickCount--
 
-    if (gSafeClickCount < 0 || !gGame.isOn) return
+    if (gSafeClickCount < 0 || !gGame.isOn || gDIYisON) return
 
     document.querySelector('.safe-clicks-count span').innerText = gSafeClickCount
 
@@ -497,7 +497,7 @@ function coverSelectedArea(rowIdxStart, rowIdxEnd, colIdxStart, colIdxEnd) {
 
 
 function turnOnMegaMode() {
-    if (gMegaHintIsOn || !gGame.isOn) return
+    if (gMegaHintIsOn || !gGame.isOn || gDIYisON) return
     gMegaHintIsOn = true
 
     const elMegaHintModal = document.querySelector('.modal-hint-instruction')
