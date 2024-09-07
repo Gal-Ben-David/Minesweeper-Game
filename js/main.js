@@ -30,6 +30,7 @@ var gStepsOnBoard
 
 var gDIYisON
 var gClicksCountOnBoard
+var gClickedCellsInDIY
 
 var gCurrLevel
 
@@ -184,7 +185,14 @@ function cellClicked(elCell, cellI, cellJ) {
     var coord = { i: cellI, j: cellJ }
 
     if (gDIYisON && gClicksCountOnBoard <= gLevel.MINES) {
-        setMinesByUser(clickedCell, coord)
+        const exists = gClickedCellsInDIY.some(item => item.i === coord.i && item.j === coord.j);
+        if (!exists) {
+            gClickedCellsInDIY.push(coord)
+            setMinesByUser(clickedCell, coord)
+        }
+        else {
+            gClicksCountOnBoard--
+        }
         showMinesNumToLocate()
         if (gClicksCountOnBoard === gLevel.MINES) {
             gDIYisON = false
@@ -782,6 +790,8 @@ function initializeParameters() {
 
     gGameStates = []
     gStepsOnBoard = []
+
+    gClickedCellsInDIY = []
 
     gMegaHintIsOn = false
     gClickCountInMegaMode = 0
